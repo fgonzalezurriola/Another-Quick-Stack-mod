@@ -42,7 +42,7 @@ tasks.register('deployMod', Copy) {
     dependsOn 'jar'
     from jar.archiveFile
     into "$hytaleHome/UserData/Mods"
-    rename { String fileName -> "${project.name}-${version}.jar" }
+    rename { String fileName -> "${project.name}.jar" }
 }
 
 // Convenience task to build and deploy
