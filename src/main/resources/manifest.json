@@ -1,0 +1,21 @@
+{
+    "Group": "dev.fgonz",
+    "Name": "Another QuickStack mod",
+    "Version": "1.0",
+    "Description": "Adds /quickstack using native quick stack rules",
+    "Authors": [
+        {
+            "Name": "Francisco"
+        }
+    ],
+    "ServerVersion": "*",
+    "Dependencies": {
+        
+    },
+    "OptionalDependencies": {
+        
+    },
+    "DisabledByDefault": false,
+    "Main": "dev.fgonz.quickstack.QuickStackCommandPlugin",
+    "IncludesAssetPack": true
+}

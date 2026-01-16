@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+}
+
+// Hytale installation path for Flatpak on Linux
+ext {
+    hytaleHome = "${System.getProperty("user.home")}/.var/app/com.hypixel.HytaleLauncher/data/Hytale"
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(files("$hytaleHome/install/$patchline/package/game/latest/Server/HytaleServer.jar"))
+}
+
+// Updates the manifest.json file with the latest properties
+tasks.register('updatePluginManifest') {
+    def manifestFile = file('src/main/resources/manifest.json')
+    doLast {
+        if (!manifestFile.exists()) {
+            throw new GradleException("Could not find manifest.json at ${manifestFile.path}!")
+        }
+        def manifestJson = new groovy.json.JsonSlurper().parseText(manifestFile.text)
+        manifestJson.Version = version
+        manifestJson.IncludesAssetPack = includes_pack.toBoolean()
+        manifestFile.text = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(manifestJson))
+    }
+}
+
+tasks.named('processResources') {
+    dependsOn 'updatePluginManifest'
+}
+
+// Copy the built JAR to Hytale Mods folder after build
+tasks.register('deployMod', Copy) {
+    dependsOn 'jar'
+    from jar.archiveFile
+    into "$hytaleHome/UserData/Mods"
+    rename { String fileName -> "${project.name}-${version}.jar" }
+}
+
+// Convenience task to build and deploy
+tasks.register('buildAndDeploy') {
+    dependsOn 'build', 'deployMod'
+}
