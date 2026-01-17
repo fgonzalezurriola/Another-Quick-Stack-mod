@@ -7,17 +7,21 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractAsyncC
 import com.hypixel.hytale.server.core.entity.entities.Player;
 
 import dev.fgonz.quickstack.QuickStackService;
+import dev.fgonz.quickstack.QuickStackConfig;
 import dev.fgonz.quickstack.BenchFillService;
+
+import com.hypixel.hytale.server.core.util.Config;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Parent command: /quickstack (/qs)
+ * Parent command: /qs
  * 
  * Usage:
  *   /qs              - Quick stack items to nearby chests
  *   /qs fill [type]  - Fill processing benches (subcommand)
+ *   /qs config       - Open settings UI (subcommand)
  * 
  * Subcommands are registered via addSubCommand().
  */
@@ -25,14 +29,15 @@ public class QuickStackParentCommand extends AbstractAsyncCommand {
 
     private final QuickStackService stackService;
 
-    public QuickStackParentCommand(QuickStackService stackService, BenchFillService fillService) {
-        super("quickstack", "Quick stack items to nearby containers");
-        this.addAliases("qs");
+    public QuickStackParentCommand(QuickStackService stackService, BenchFillService fillService, 
+                                   Config<QuickStackConfig> configWrapper) {
+        super("qs", "Quick stack items to nearby containers");
         this.setPermissionGroup(GameMode.Adventure);
         this.stackService = stackService;
 
         // Register subcommands
         this.addSubCommand(new FillSubCommand(fillService));
+        this.addSubCommand(new ConfigSubCommand(stackService, configWrapper));
     }
 
     @Override

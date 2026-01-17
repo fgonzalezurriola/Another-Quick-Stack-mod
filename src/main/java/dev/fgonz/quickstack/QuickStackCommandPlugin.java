@@ -6,16 +6,19 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.util.Config;
 
 import dev.fgonz.quickstack.commands.QuickStackParentCommand;
+import dev.fgonz.quickstack.commands.QuickStackUiCommand;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
- * Plugin entry point. Registers the unified QuickStack command system.
+ * Plugin entry point. Registers the QuickStack command system.
  * 
  * Commands:
- *   /quickstack (/qs)           - Quick stack items to nearby chests
- *   /quickstack fill [type]     - Fill processing benches (furnace, tannery, etc.)
+ *   /quickstack          - Open settings UI
+ *   /qs                  - Quick stack to nearby chests
+ *   /qs fill [type]      - Fill processing benches (furnace, tannery)
+ *   /qs config           - Open settings UI
  */
 public class QuickStackCommandPlugin extends JavaPlugin {
 
@@ -70,12 +73,15 @@ public class QuickStackCommandPlugin extends JavaPlugin {
         this.stackService = new QuickStackService(config);
         this.benchFillService = new BenchFillService(config);
 
-        // Register unified command with subcommands
+        // Register commands
         CommandRegistry registry = getCommandRegistry();
-        registry.registerCommand(new QuickStackParentCommand(stackService, benchFillService));
+        registry.registerCommand(new QuickStackUiCommand(stackService, configWrapper));
+        registry.registerCommand(new QuickStackParentCommand(stackService, benchFillService, configWrapper));
 
         System.out.println("[QuickStack] Ready! Commands:");
+        System.out.println("  /quickstack   - Open settings UI");
         System.out.println("  /qs           - Quick stack to chests");
+        System.out.println("  /qs config    - Open settings UI");
         System.out.println("  /qs fill      - Fill all processing benches");
         System.out.println("  /qs fill f    - Fill furnaces only");
         System.out.println("  /qs fill t    - Fill tanneries only");
