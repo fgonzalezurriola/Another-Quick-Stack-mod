@@ -116,6 +116,7 @@ public class QuickStackService {
 
                 ItemContainer backpack = playerInventory.getBackpack();
                 ItemContainer storage = playerInventory.getStorage();
+                ItemContainer hotbar = playerInventory.getHotbar();
 
                 for (Vector3i blockPos : containerPositions) {
                     try {
@@ -137,6 +138,13 @@ public class QuickStackService {
 
                         if (config.isCheckStorage() && storage != null) {
                             var tx = storage.quickStackTo(chestContainer);
+                            if (tx != null && tx.size() > 0 && tx.succeeded()) {
+                                processTransaction(tx, movedItemsSummary);
+                            }
+                        }
+
+                        if (config.isCheckHotbar() && hotbar != null) {
+                            var tx = hotbar.quickStackTo(chestContainer);
                             if (tx != null && tx.size() > 0 && tx.succeeded()) {
                                 processTransaction(tx, movedItemsSummary);
                             }

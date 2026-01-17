@@ -147,6 +147,7 @@ public class BenchFillService {
 
                 ItemContainer backpack = playerInventory.getBackpack();
                 ItemContainer storage = playerInventory.getStorage();
+                ItemContainer hotbar = playerInventory.getHotbar();
 
                 for (Vector3i blockPos : benchPositions) {
                     try {
@@ -181,6 +182,9 @@ public class BenchFillService {
                         }
                         if (config.isCheckStorage() && storage != null) {
                             transferItems(storage, container, handler, movedItems);
+                        }
+                        if (config.isCheckHotbar() && hotbar != null) {
+                            transferItems(hotbar, container, handler, movedItems);
                         }
 
                         // Activate if conditions are met
